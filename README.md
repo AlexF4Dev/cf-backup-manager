@@ -6,7 +6,13 @@ Cloud Foundry application to automate backup and restore of application back end
 
 The backup-manager runs as a Cloud Foundry application with zero instances. Most backup/restore commands should be run via task.
 
-    $ cf run-task backup-manager --name dashboard-backup --command 'restore mysql dashboard-db /backup-manager-v1/development/dashboard-db/dashboard-db-20211201022504-backup.gz'
+    $ cf run-task backup-manager --name dashboard-restore --command 'restore mysql dashboard-db /backup-manager-v1/development/dashboard-db/dashboard-db-20211201022504-backup.gz'
+
+If you need to SSH into the container, make sure to set the path so that the
+commands are available to you.
+
+    $ PATH=/usr/local/bin:$PATH
+
 
 ### Supported services
 
