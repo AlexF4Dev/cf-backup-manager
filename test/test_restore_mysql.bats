@@ -16,8 +16,11 @@ function setup () {
   VCAP_SERVICES="$(cat $(test_fixture mysql-test.vcap.json))"
   VCAP_APPLICATION="$(cat $(test_fixture vcap-application.json))"
 
+  # Create the backup-manager bucket
   aws_helper s3api create-bucket --bucket $TEST_DATASTORE_BUCKET
-  # upload backup fixture
+
+  # Gzip and upload an empty backup
+  gzip < $(test_fixture mysql-empty-backup.sql) | aws_helper s3 cp - s3://$TEST_DATASTORE_BUCKET/mysql-backup.sql.gz
 }
 
 function teardown () {
@@ -31,8 +34,11 @@ function teardown () {
   assert_output --partial 'usage: restore <service_type> <service_name> <backup_path>'
 }
 
-@test "restore mysql application-db" {
-  run restore mysql application-db /mysql-backup.sql.gz
+@test "restore mysql application-mysql-db" {
+  run restore mysql application-mysql-db /mysql-backup.sql.gz
   assert_success
-  assert_output --partial 'usage: restore <service_type> <service_name> [path]'
+  assert_output - <<EOF
+restoring application-mysql-db (mysql) from /mysql-backup.sql.gz...
+ok
+EOF
 }
