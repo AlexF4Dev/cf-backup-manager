@@ -19,5 +19,5 @@ function service_backup () {
 }
 
 function service_restore () {
-  mysql --binary-mode --host="$DB_HOST" --port="$DB_PORT" --password="$DB_PASSWORD" --user="$DB_USER" --verbose "$DB_NAME"
+  mysql --binary-mode --host="$DB_HOST" --port="$DB_PORT" --password="$DB_PASSWORD" --user="$DB_USER" "$DB_NAME"
 }
