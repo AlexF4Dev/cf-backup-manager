@@ -32,3 +32,16 @@ function teardown () {
   assert_output --partial 'restoring application-mysql-db (mysql) from /mysql-backup.sql.gz...'
   assert_output --partial 'ok'
 }
+
+# TODO: create separate db, the test reuses db
+@test "mysql backup and restore with db" {
+  run backup mysql application-mysql-db:application-mysql-db /mysql-backup.sql.gz
+  assert_success
+  assert_output --partial 'backing up application-mysql-db (mysql) to /mysql-backup.sql.gz...'
+  assert_output --partial 'ok'
+
+  run restore mysql application-mysql-db:application-mysql-db /mysql-backup.sql.gz
+  assert_success
+  assert_output --partial 'restoring application-mysql-db (mysql) from /mysql-backup.sql.gz...'
+  assert_output --partial 'ok'
+}

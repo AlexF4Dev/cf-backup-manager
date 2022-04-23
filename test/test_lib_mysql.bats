@@ -31,6 +31,19 @@ DB_NAME="application-mysql-db"
 EOF
 }
 
+@test "mysql:service_get_credentials_env-db" {
+  run service_get_credentials_env application-mysql-db other-db
+  assert_success
+  assert_output - <<EOF
+DB_HOST="mysql"
+DB_PASSWORD="mysql-password"
+DB_PORT="3306"
+DB_USER="app"
+DB_NAME="other-db"
+EOF
+}
+
+
 @test "mysql:service_backup" {
   # These credentials should match the docker-compose environment
   DB_NAME=application-mysql-db

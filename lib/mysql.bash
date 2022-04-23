@@ -4,13 +4,14 @@
 function service_get_credentials_env () {
   local service_name="${1:-}"
   [[ -z "$service_name" ]] && fail service_get_credentials_env passed an empty service_name
+  local database_name="${2:-}"
 
   cat <<EOF
 DB_HOST="$(get_service_instance "$service_name" | jq -r -e '.credentials.host')"
 DB_PASSWORD="$(get_service_instance "$service_name" | jq -r -e '.credentials.password')"
 DB_PORT="$(get_service_instance "$service_name" | jq -r -e '.credentials.port')"
 DB_USER="$(get_service_instance "$service_name" | jq -r -e '.credentials.username')"
-DB_NAME="$(get_service_instance "$service_name" | jq -r -e '.credentials.db_name')"
+DB_NAME="${database_name:-$(get_service_instance "$service_name" | jq -r -e '.credentials.db_name')}"
 EOF
 }
 
