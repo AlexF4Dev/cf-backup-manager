@@ -1,0 +1,40 @@
+#!/bin/bash
+#
+# Prints the contents of the file stored on s3.
+#
+# Usage:
+#   list: [path]
+#
+# path: optional path within the S3 bucket to list
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+source $PROJECT_DIR/lib/core.bash
+
+function usage () {
+  cat <<EOF >&2
+usage: print  [backup_path]
+  backup_path:  Full path of the backup to print within the s3 bucket
+
+Environment variables:
+
+  DATASTORE_S3_SERVICE_NAME: the name of the S3 service to store backups.
+
+EOF
+}
+
+
+if [[ "$#" -lt 1 ]]; then
+  usage
+  exit 1
+fi
+
+bucket_path="${1:-}"
+bucket_path="${bucket_path#/}" # Remove starting /
+
+# # Load backup-manager-s3 creds
+eval "$(get_datastore_bucket_credentials_env)"
+
+AWS_ACCESS_KEY_ID=$DATASTORE_BUCKET_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$DATASTORE_BUCKET_SECRET_ACCESS_KEY aws_cmd s3 cp s3://${DATASTORE_BUCKET_NAME}/${bucket_path} -
