@@ -10,7 +10,7 @@
         "password": "mysql-password",
         "port": "3306",
         "uri": "mysql://app:mysql-password@mysql:3306/application-mysql-db",
-        "username": "app"
+        "username": "root"
       },
       "instance_guid": "84ec223d-b3ba-4fd0-9648-08aebc8c9863",
       "instance_name": "application-mysql-db",

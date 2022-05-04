@@ -152,6 +152,7 @@ services:
     image: mysql:5
     environment:
       MYSQL_USER: app
+      MYSQL_ROOT_PASSWORD: mysql-password
       MYSQL_DATABASE: application-mysql-db
       MYSQL_PASSWORD: mysql-password
       MYSQL_ALLOW_EMPTY_PASSWORD: 1

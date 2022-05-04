@@ -1,0 +1,40 @@
+#!/bin/bash
+#
+# List Databases
+#
+# Usage:
+#  list_databases  <service_type> <service_name> 
+#
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+function usage () {
+  cat <<EOF >&2
+usage: list_db <service_type> <service_name> 
+  service_type: the type of service to list (e.g. mysql or postgresql)
+  service_name: the db service name to list
+EOF
+}
+
+
+if [[ "$#" -lt 2 ]]; then
+  usage
+  exit 1
+fi
+
+# Parse arguments
+service_type="$1"
+shift
+service_name="$1"
+
+source $PROJECT_DIR/lib/core.bash
+source $PROJECT_DIR/lib/${service_type}.bash
+
+eval "$(service_get_credentials_env $service_name)"
+
+echo "Listing databases on $service_name ($service_type)..."
+time service_list_databases
+echo ok
+

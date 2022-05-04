@@ -34,7 +34,7 @@ function teardown () {
 }
 
 # TODO: create separate db, the test reuses db
-@test "mysql backup and restore with db" {
+@test "mysql backup and restore with db with db list" {
   run backup mysql application-mysql-db:application-mysql-db /mysql-backup.sql.gz
   assert_success
   assert_output --partial 'backing up application-mysql-db (mysql) to /mysql-backup.sql.gz...'
@@ -43,5 +43,36 @@ function teardown () {
   run restore mysql application-mysql-db:application-mysql-db /mysql-backup.sql.gz
   assert_success
   assert_output --partial 'restoring application-mysql-db (mysql) from /mysql-backup.sql.gz...'
+  assert_output --partial 'ok'
+
+  run list_databases  mysql application-mysql-db
+  
+  assert_success
+  assert_output --partial 'Database'
+  assert_output --partial 'application-mysql-db'
+  assert_output --partial 'ok'
+}
+
+@test "mysql create and delete database" {
+  run create_database mysql "application-mysql-db:test-db"
+  assert_success
+  assert_output --partial 'ok'
+  
+  run list_databases  mysql application-mysql-db
+  assert_success
+  assert_output --partial 'test-db'
+
+  run run_sql  mysql application-mysql-db:test-db 'SHOW DATABASES'
+  assert_success
+  assert_output --partial 'test-db'
+
+  run run_sql  mysql application-mysql-db:test-db 'CREATE TABLE TEST (col int)'
+  assert_success
+
+  run run_sql  mysql application-mysql-db:test-db 'SELECT * FROM TEST'
+  assert_success
+
+  run delete_database mysql "application-mysql-db:test-db"
+  assert_success
   assert_output --partial 'ok'
 }

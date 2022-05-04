@@ -1,0 +1,44 @@
+#!/bin/bash
+#
+# Run SQL
+#
+# Usage:
+#  run_sql <service_type> <service_name>:<databasename>  <sql>
+#
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+function usage () {
+  cat <<EOF >&2
+usage: run_sql <service_type> <service_name>:<databasename>  <sql>
+  service_type: the type of service (e.g. mysql or postgresql)
+  service_name: the db service name to run sql on <service_name>:<databasename>
+  <sql>: sql to execute
+EOF
+}
+
+
+if [[ "$#" -lt 3 ]]; then
+  usage
+  exit 1
+fi
+
+# Parse arguments
+service_type="$1"
+shift
+service_name="$1"
+shift
+sql="$1"
+
+IFS=: read service_name database_name <<< "$service_name"
+
+source $PROJECT_DIR/lib/core.bash
+source $PROJECT_DIR/lib/${service_type}.bash
+
+eval "$(service_get_credentials_env $service_name $database_name)"
+
+echo "Execute SQL [$sql] for $database_name on $service_name ($service_type)..."
+time service_execute_sql "$sql"
+echo ok

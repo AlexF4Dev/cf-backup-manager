@@ -22,3 +22,20 @@ function service_backup () {
 function service_restore () {
   mysql --binary-mode --host="$DB_HOST" --port="$DB_PORT" --password="$DB_PASSWORD" --user="$DB_USER" "$DB_NAME"
 }
+
+function service_list_databases () {
+  mysql --host="$DB_HOST" --port="$DB_PORT" --password="$DB_PASSWORD" --user="$DB_USER" -e "SHOW DATABASES;"
+}
+
+function service_create_database () {
+  mysql --host="$DB_HOST" --port="$DB_PORT" --password="$DB_PASSWORD" --user="$DB_USER" -e "CREATE DATABASE \`$DB_NAME\`;"
+}
+
+function service_delete_database () {
+  mysql --host="$DB_HOST" --port="$DB_PORT" --password="$DB_PASSWORD" --user="$DB_USER" -e "DROP DATABASE \`$DB_NAME\`;"
+}
+
+function service_execute_sql () {
+  mysql --host="$DB_HOST" --port="$DB_PORT" --password="$DB_PASSWORD" --user="$DB_USER" "$DB_NAME" -e "$1;"
+}
+

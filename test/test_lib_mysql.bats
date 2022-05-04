@@ -26,7 +26,7 @@ SQL
 DB_HOST="mysql"
 DB_PASSWORD="mysql-password"
 DB_PORT="3306"
-DB_USER="app"
+DB_USER="root"
 DB_NAME="application-mysql-db"
 EOF
 }
@@ -38,7 +38,7 @@ EOF
 DB_HOST="mysql"
 DB_PASSWORD="mysql-password"
 DB_PORT="3306"
-DB_USER="app"
+DB_USER="root"
 DB_NAME="other-db"
 EOF
 }
